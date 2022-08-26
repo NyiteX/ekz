@@ -2,9 +2,8 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <conio.h>
 using namespace std;
-
-static bool win = false;
 
 bool Proverka(const string& b)
 {
@@ -120,26 +119,29 @@ class Vis
 public:
     Vis() {};
 
-    void PrintWords() 
+    void PrintStr(const string& str)
     {
+        system("cls");
         cout << "\t\t\t|";
+        for (int i = 0; i < str.size(); i++)
+        {
+            cout << str[i] << "|";
+        }
+        cout << endl;
+    }
+    void PrintWords() 
+    {      
         int u = rand() % words.size();
         id = u;
         for (int i = 0; i < words[u].size(); i++)
         {
             if (i % 2 == 0)
-            {
                 wo += "*";
-                wo += "|";
-            }
             else
-            {
                 wo += words[u][i];
-                wo += "|";
-            }
         }
-        cout << wo << endl;
-    }
+        PrintStr(wo);
+    }  
     void LoadfromFile(const string& path)
     {
         ifstream op(path);
@@ -159,56 +161,63 @@ public:
     void Play()
     {
         int m = 0;
-        while(win == false)
+        bool f = false;
+        bool keep = false;
+        while (keep == false)
         {
             string b = "1";
+            bool l = false;           
             while (b.size() > 1 || Proverka(b) == 0)
             {
                 cout << "Введите букву: ";
                 cin >> b;
+                if (b.size() > 1 || Proverka(b) == 0)
+                    cout << "Это не буква =/\n\n";
             }
             for (int i = 0; i < words[id].size(); i++)
             {
                 if (words[id][i] == b[0])
                 {
-                    wo.clear();
-                    cout << "\t\t\t|";
-                    for (int u = 0; u < words[id].size(); u++)
-                    {
-                        if (u % 2 != 0 || words[id][u] == b[0])
-                        {                           
-                            wo += words[id][u];
-                            wo += "|";
-                        }
-                        else
-                        {
-                            wo += "*";
-                            wo += "|";
-                        }
-                    }
-                    cout << wo << endl;
-                    break;
-                }
-                else
-                {
-                    cout << v[m];
-                    m++;
+                    wo[i] = b[0];
+                    l = true;
                 }
             }
-            bool f = false;
-            for (int i = 0; i < words[id].size(); i++)
+            if (l == true)
+                PrintStr(wo);
+            else
             {
-                if (words[id][i] == '*')
-                {
-                    f = false;
-                    break;
-                }
+                system("cls");
+                PrintStr(wo);
+                cout << v[m];
+                if (m < v.size() - 1)
+                    m++;
                 else
-                    f = true;
+                {
+                    keep = true;
+                    cout << "\n\t~~~~~~~~~~ Вы проиграли. ~~~~~~~~~~\n\n";
+                }
             }
-            /*if (f == true)
-                win = true;*/
+            if (!keep)
+            {
+                for (int i = 0; i < wo.size(); i++)
+                {
+                    if (wo[i] == '*')
+                    {
+                        f = false;
+                        break;
+                    }
+                    else
+                        f = true;
+                }
+                if (f == true)
+                {
+                    keep = true;
+                    if(m<v.size()-1)
+                        cout << "\n\t~~~~~~~~~~ Победа! ~~~~~~~~~~\n\n";
+                }
+            }                
         }
+        wo.clear();
     }
 };
 
@@ -221,10 +230,24 @@ int main()
 
     Vis A;
     A.LoadfromFile(path);
+    char vvod;
+    do
+    {
+        system("cls");
+        cout << "1. Игра.\nESC. Выход.\n";
+        vvod = _getch();
+        switch (vvod)
+        {
+        case'1':
+        {
+            A.PrintWords();
+            A.Play();
 
-    A.PrintWords();
-    A.Play();
-
+            system("pause");
+            break;
+        }
+        }
+    } while (vvod != 27);
 
     return 0;
 }
