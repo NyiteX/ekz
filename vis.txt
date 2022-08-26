@@ -1,2 +1,6 @@
 turtle
 power
+ocean
+predator
+titan
+legend
