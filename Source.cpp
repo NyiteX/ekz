@@ -163,10 +163,12 @@ public:
         int m = 0;
         bool f = false;
         bool keep = false;
+        string bookvi;
         while (keep == false)
         {
+            double time1 = clock();
             string b = "1";
-            bool l = false;           
+            bool l = false;       
             while (b.size() > 1 || Proverka(b) == 0)
             {
                 cout << "Введите букву: ";
@@ -174,6 +176,7 @@ public:
                 if (b.size() > 1 || Proverka(b) == 0)
                     cout << "Это не буква =/\n\n";
             }
+            bookvi += b + ", ";
             for (int i = 0; i < words[id].size(); i++)
             {
                 if (words[id][i] == b[0])
@@ -195,6 +198,12 @@ public:
                 {
                     keep = true;
                     cout << "\n\t~~~~~~~~~~ Вы проиграли. ~~~~~~~~~~\n\n";
+                    double time2 = clock();
+                    bookvi.resize(bookvi.size() - 2);
+                    cout << "Времени затрачено: " << (time2 - time1) / 1000 << " сек.\n";
+                    cout << "Буквы, введённые игроком: " << bookvi << ".\n";
+                    cout << "Кол-во неудачных попыток: " << m << ".\n";
+                    cout << "Искомое слово: " << words[id] << ".\n";
                 }
             }
             if (!keep)
@@ -213,20 +222,32 @@ public:
                 {
                     keep = true;
                     if(m<v.size()-1)
+                    {
                         cout << "\n\t~~~~~~~~~~ Победа! ~~~~~~~~~~\n\n";
+                        double time2 = clock();
+                        bookvi.resize(bookvi.size() - 2);
+                        cout << "Времени затрачено: " << (time2 - time1) / 1000 << " сек.\n";
+                        cout << "Буквы, введённые игроком: " << bookvi << ".\n";
+                        cout << "Кол-во неудачных попыток: " << m << ".\n";
+                        cout << "Искомое слово: " << words[id] << ".\n";
+                    }
                 }
             }                
         }
         wo.clear();
     }
+    ~Vis()
+    {
+        words.clear();
+        v.clear();
+    }
 };
-
 
 int main()
 {
     srand(time(0));
     setlocale(LC_ALL, "ru");
-    string path = "vis.txt" ;
+    string path = "vis.txt";
 
     Vis A;
     A.LoadfromFile(path);
